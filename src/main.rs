@@ -10,29 +10,6 @@ use std::env;
 use std::error::Error;
 use std::{thread, time};
 
-async fn t1() -> Result<u32, u32> {
-    let ten_secs = time::Duration::from_secs(3);
-    thread::sleep(ten_secs);
-    println!("t1 done");
-    Ok(10)
-}
-
-/*
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn Error>> {
-    let mut rt = tokio::runtime::Runtime::new().unwrap();
-    let t1_func = t1();
-
-    let r = rt.spawn(t1_func);
-   
-
-    let r1 = r.await?;
-
-    println!("{:?}, --done--", r1);
-
-    Ok(())
-}
-*/
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     let listen_addr = env::args()
@@ -40,16 +17,15 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .unwrap_or_else(|| "0.0.0.0:443".to_string());
     let server_addr = env::args()
         .nth(2)
-        .unwrap_or_else(|| "172.16.12.100:443".to_string());
-        //.unwrap_or_else(|| "172.16.12.11:443".to_string());
-        //.unwrap_or_else(|| "172.16.12.11:22".to_string());
+        .unwrap_or_else(|| "10.10.10.10:443".to_string()); //git lfs server address
+
 
     let listen_addr2 = env::args()
         .nth(1)
         .unwrap_or_else(|| "0.0.0.0:6666".to_string());
     let server_addr2 = env::args()
         .nth(2)
-        .unwrap_or_else(|| "172.16.12.100:22".to_string());
+        .unwrap_or_else(|| "10.0.10.10:22".to_string()); //git ssh address
 
     println!("Listening on: {}", listen_addr);
     println!("Proxying to: {}", server_addr);
