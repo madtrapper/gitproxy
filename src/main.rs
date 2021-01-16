@@ -9,9 +9,11 @@ use futures::FutureExt;
 use std::env;
 use std::error::Error;
 use std::{thread, time};
+use tokio::runtime::Runtime;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
+    let mut rt = Runtime::new().unwrap();
     let listen_addr = env::args()
         .nth(1)
         .unwrap_or_else(|| "0.0.0.0:443".to_string());
@@ -61,8 +63,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         }
     });
 
-    t1.await?;
-    t2.await?;
+    tokio::join!(t1, t2);
 
     Ok(())
 }
